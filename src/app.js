@@ -153,7 +153,7 @@ app.post('/bookmarks', (req, res) => {
 });
 
 //delete bookmarks deletes a bookmark with a given id
-app.delete('/bookmark/:id', (req, res) => {
+app.delete('/bookmarks/:id', (req, res) => {
   const { id } = req.params; 
   const bookmarkIndex = bookmarkList.findIndex(li => li.id == id);
 
