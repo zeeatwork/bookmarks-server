@@ -39,15 +39,15 @@ const bookmarkList  = [{
   url: 'http://www.google.com',
   description: 'a link to google',
   rating: 5
-}];
-[{
+},
+{
   id: 2,
   title: 'Yahoo Link', 
   url: 'http://www.yahoo.com',
   description: 'a link to yahoo',
   rating: 2
-}];
-[{
+},
+{
   id: 3,
   title: 'Thinkful Link', 
   url: 'http://www.thinkful.com',
@@ -108,7 +108,7 @@ app.get('/bookmarks/:id', (req, res) => {
 //post bookmarks accepts a JSON object accepts user bookmark to add to list
 app.post('/bookmarks', (req, res) => {
   const { title, url, description, rating } = req.body;
-//post bookmarks validation 
+  //post bookmarks validation 
   if (!title) {
     // eslint-disable-next-line quotes
     logger.error(`Title is required`);
@@ -153,6 +153,22 @@ app.post('/bookmarks', (req, res) => {
 });
 
 //delete bookmarks deletes a bookmark with a given id
+app.delete('/bookmark/:id', (req, res) => {
+  const { id } = req.params; 
+  const bookmarkIndex = bookmarkList.findIndex(li => li.id == id);
 
+  if (bookmarkIndex === -1) {
+    logger.error(`Bookmark with id ${id} not found.`);
+    return res
+      .status(404)
+      .send('Not found');
+  }
+  bookmarkList.splice(bookmarkIndex, 1);
+
+  logger.info(`Bookmark with id ${id} deleted.`);
+  res
+    .status(204)
+    .end();
+});
 
 module.exports = app;
