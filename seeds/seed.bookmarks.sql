@@ -1,6 +1,6 @@
 INSERT INTO bookmarks (title, url, description, rating )
 VALUES
- ('Google', 'http://www.google.com', 'my link to google', 53),
+ ('Google', 'http://www.google.com', 'my link to google', 5),
   ('Yahoo', 'http://www.yahoo.com', 'my link to yahoo', 5),
   ('Pinterest', 'http://www.pinterest.com', 'my link to yahoo', 3),
   ('Twitter', 'http://www.twitter.com', 'my link to Twitter', 1),

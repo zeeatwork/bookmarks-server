@@ -8,6 +8,13 @@ const { NODE_ENV } = require('./config');
 const winston = require('winston');
 const {v4: uuid} = require('uuid');
 const app = express();
+const knex = require('knex');
+const BookmarksService = require('./bookmarks-service');
+
+// const knexInstance = knex({
+//   client: 'pg', 
+//   connection: 'postgresql://postgresql@localhost/bookmarks'
+// })
 
 const morganOption = (NODE_ENV === 'production')
   ? 'tiny'
@@ -61,16 +68,7 @@ app.get('/', (req, res) => {
 
 //create bearer token functtion
 
-app.use(function validateBearerToken(req, res, next) {
-  const apiToken = process.env.API_TOKEN;
-  const authToken = req.get('Authorization');
 
-  if(!authToken || authToken.split(' ')[1] !== apiToken) {
-    logger.error(`Unauthorized request to path: ${req.path}`);
-    return res.status(401).json({ error: 'Unauthorized request' });
-  }
-  next();
-});
 
 app.use(function errorHandler(error, req, res, next) {
   let response;
@@ -84,9 +82,13 @@ app.use(function errorHandler(error, req, res, next) {
 });
 
 // Get bookmarks returns bookmark list
-app.get('/bookmarks', (req, res) => {
-  res
-    .json(bookmarkList);
+app.get('/bookmarks', (req, res, next) => {
+  const knexInstance = req.app.get('db')
+  BookmarksService.getAllBookmarks(knexInstance)
+    .then(bookmarks => {
+      res.json(bookmarks)
+    })
+    .catch(next);
 });
 //Get bookmarks id re a single bookmark by id
 app.get('/bookmarks/:id', (req, res) => {
@@ -171,4 +173,6 @@ app.delete('/bookmarks/:id', (req, res) => {
     .end();
 });
 
+//console.log(BookmarksService.getAllBookmarks(app.get('db')));
+console.log('knex and driver installed coreectly');
 module.exports = app;
